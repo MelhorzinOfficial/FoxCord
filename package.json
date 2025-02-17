@@ -1,5 +1,25 @@
 {
-	"dependencies": {
-		"discord.js": "^14.18.0"
-	}
+  "name": "bot-rocketseat",
+  "version": "1.0.0",
+  "description": "RaposoBot é um bot para Discord de código aberto, repleto de funcionalidades legais e sempre em evolução. Qualquer pessoa pode usá-lo livremente para fins não comerciais!",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^14.18.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaposoG/botzin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RaposoG/botzin/issues"
+  },
+  "homepage": "https://github.com/RaposoG/botzin#readme"
 }
