@@ -26,14 +26,14 @@ FoxCord é um bot para Discord de código aberto, repleto de funcionalidades leg
    ```
 
 ## 🔧 Contribuição
-Este projeto é aberto para contribuições! Se você quiser ajudar a melhorar o RaposoBot, siga estes passos:
+Este projeto é aberto para contribuições! Se você quiser ajudar a melhorar o FoxCord, siga estes passos:
 1. Fork o repositório.
 2. Crie uma branch para sua feature (`git checkout -b minha-feature`).
 3. Faça commit das suas alterações (`git commit -m 'Adicionando nova feature'`).
 4. Envie um pull request!
 
 ## ℹ Licença
-O RaposoBot é totalmente livre para uso não comercial. Leia os detalhes no arquivo `LICENSE`.
+O FoxCord é totalmente livre para uso não comercial. Leia os detalhes no arquivo `LICENSE`.
 
 ---
 Feito com ❤️ por Raposo e a comunidade!
