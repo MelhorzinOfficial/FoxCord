@@ -1,19 +1,27 @@
-import { REST, Routes, SlashCommandBuilder } from "discord.js";
-import dotenv from "dotenv";
+import { REST, Routes } from "discord.js";
+import { commands } from "./commands";
+import { config } from "dotenv";
 
-dotenv.config();
+config();
 
-const commands = [new SlashCommandBuilder().setName("ping").setDescription("Responde com pong!")];
+const commandsData = Object.values(commands).map((command) => command.data);
 
-const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
+const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN!);
 
-(async () => {
+type DeployCommandsProps = {
+  guildId: string;
+};
+
+export async function deployCommands({ guildId }: DeployCommandsProps) {
   try {
-    console.log("🚀 Iniciando deploy de comandos...");
+    console.log("🚀 Started refreshing application (/) commands.");
 
-    await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!), { body: commands });
-    console.log("✅ Comandos deployados com sucesso!");
+    await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID!, guildId), {
+      body: commandsData,
+    });
+
+    console.log("✅ Successfully reloaded application (/) commands.");
   } catch (error) {
-    console.error("❌ Erro ao deployar comandos:", error);
+    console.error("❌ Error deploying commands:", error);
   }
-})();
+}
