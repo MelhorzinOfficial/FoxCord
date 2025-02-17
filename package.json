@@ -2,13 +2,21 @@
   "name": "bot-rocketseat",
   "version": "1.0.0",
   "description": "RaposoBot é um bot para Discord de código aberto, repleto de funcionalidades legais e sempre em evolução. Qualquer pessoa pode usá-lo livremente para fins não comerciais!",
-  "main": "index.js",
-  "dependencies": {
-    "discord.js": "^14.18.0"
-  },
-  "devDependencies": {},
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/index.js",
+    "dev": "tsx --watch src/index.ts",
+    "build": "tsup"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "tsx": "^4.19.2"
   },
   "repository": {
     "type": "git",
