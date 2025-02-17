@@ -13,16 +13,16 @@ FoxCord é um bot para Discord de código aberto, repleto de funcionalidades leg
 ## ⚙ Instalação
 1. Clone este repositório:
    ```sh
-   git clone https://github.com/seu-usuario/raposobot.git
+   git clone https://github.com/RaposoG/FoxCord
    ```
 2. Instale as dependências:
    ```sh
-   npm install
+   pnpm install
    ```
 3. Configure o arquivo `.env` com as credenciais do seu bot.
 4. Inicie o bot:
    ```sh
-   npm start
+   pnpm start
    ```
 
 ## 🔧 Contribuição
