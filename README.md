@@ -1,6 +1,7 @@
-# RaposoBot
+# FoxCord
 
-RaposoBot é um bot para Discord de código aberto, repleto de funcionalidades legais e sempre em evolução. Qualquer pessoa pode usá-lo livremente para fins não comerciais!
+
+FoxCord é um bot para Discord de código aberto, repleto de funcionalidades legais e sempre em evolução. Qualquer pessoa pode usá-lo livremente para fins não comerciais!
 
 ## ✨ Recursos
 - Comandos personalizados para moderação
