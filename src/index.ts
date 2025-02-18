@@ -1,4 +1,5 @@
 import { Client } from 'discord.js';
+import { env } from './config/env';
 import { intents } from './config/intents';
 import * as allEvents from './events';
 import { EventImpl, RegisteredEvents } from './events/impl';
@@ -13,4 +14,4 @@ for (const event of events) {
 	client.on(event.type, event.listener);
 }
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(env.DISCORD_TOKEN);
