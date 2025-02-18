@@ -1,16 +1,16 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../impl';
 
-class VoiceInfo implements Command {
+class VoiceAddMod implements Command {
 	get data() {
 		return new SlashCommandBuilder()
-			.setName('voice-info')
+			.setName('voice-add-mod')
 			.setDescription(
-				'Visualiza informações sobre o canal de voz atual.',
+				'Adiciona um usuário como moderador do canal de voz',
 			);
 	}
 
 	async execute(interaction: CommandInteraction) {}
 }
 
-export const voiceInfo = new VoiceInfo();
+export const voiceAddMod = new VoiceAddMod();

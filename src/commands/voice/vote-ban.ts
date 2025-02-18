@@ -1,16 +1,14 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../impl';
 
-class VoiceInfo implements Command {
+class VoiceVoteBan implements Command {
 	get data() {
 		return new SlashCommandBuilder()
-			.setName('voice-info')
-			.setDescription(
-				'Visualiza informações sobre o canal de voz atual.',
-			);
+			.setName('voice-vote-ban')
+			.setDescription('Vota para banir um usuário do canal de voz');
 	}
 
 	async execute(interaction: CommandInteraction) {}
 }
 
-export const voiceInfo = new VoiceInfo();
+export const voiceVoteBan = new VoiceVoteBan();

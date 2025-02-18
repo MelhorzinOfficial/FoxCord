@@ -1,13 +1,9 @@
-import * as ping from "./info/ping";
-import * as limite from "./voice/limit";
-import * as renomear from "./voice/rename";
-import * as transferir from "./voice/transfer";
-import * as info from "./voice/info";
-
-export const commands = {
-  ping,
-  limite,
-  renomear,
-  transferir,
-  info,
-};
+export { voiceAddMod } from './voice/add-mod';
+export { voiceBan } from './voice/ban';
+export { voiceChangeLimit } from './voice/change-limit';
+export { voiceDelMod } from './voice/del-mod';
+export { voiceInfo } from './voice/info';
+export { voiceKick } from './voice/kick';
+export { voiceTransferOwner } from './voice/transfer-owner';
+export { voiceUnban } from './voice/unban';
+export { voiceVoteBan } from './voice/vote-ban';

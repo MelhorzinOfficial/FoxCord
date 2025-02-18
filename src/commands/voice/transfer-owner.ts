@@ -1,16 +1,16 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../impl';
 
-class VoiceInfo implements Command {
+class VoiceTransferOwner implements Command {
 	get data() {
 		return new SlashCommandBuilder()
-			.setName('voice-info')
+			.setName('voice-transfer-owner')
 			.setDescription(
-				'Visualiza informações sobre o canal de voz atual.',
+				'Transfere a propriedade do canal de voz para outro usuário',
 			);
 	}
 
 	async execute(interaction: CommandInteraction) {}
 }
 
-export const voiceInfo = new VoiceInfo();
+export const voiceTransferOwner = new VoiceTransferOwner();
