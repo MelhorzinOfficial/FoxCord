@@ -18,7 +18,7 @@ interface BotConfig {
 // Configuração padrão
 const defaultConfig: BotConfig = {
   voiceSettings: {
-    defaultUserLimit: 10,
+    defaultUserLimit: 99,
     defaultPrefix: "🚀",
     maxChannelsPerUser: 1,
     deleteEmptyAfterSeconds: 30,
