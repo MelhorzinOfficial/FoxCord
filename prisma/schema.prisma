@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../data.db"
+}
+
+model Guild {
+  id                      String         @id
+  name                    String
+  voiceGeneratorChannelId String?
+  voiceChannels           VoiceChannel[]
+  users                   User[]
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+}
+
+model User {
+  id            String         @id
+  username      String
+  guildId       String
+  guild         Guild          @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  ownedChannels VoiceChannel[] @relation("ChannelOwner")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model VoiceChannel {
+  id        String   @id
+  name      String
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  ownerId   String
+  owner     User     @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  userLimit Int      @default(10)
+  isLocked  Boolean  @default(false)
+  status    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
