@@ -2,7 +2,7 @@
   "name": "bot-melhorzin",
   "version": "1.0.0",
   "description": "RaposoBot é um bot para Discord de código aberto, repleto de funcionalidades legais e sempre em evolução. Qualquer pessoa pode usá-lo livremente para fins não comerciais!",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "start": "prisma generate && prisma migrate deploy && node dist/index.js",
     "dev": "tsx --watch src/index.ts",
