@@ -6,6 +6,7 @@ import * as info from "./voice/info";
 import * as kick from "./voice/kick";
 import * as lock from "./voice/lock";
 import * as setupVoice from "./admin/setupVoice";
+import * as clear from "./moderation/clear";
 
 export const commands = {
   ping,
@@ -16,4 +17,5 @@ export const commands = {
   kick,
   lock,
   setupvoice: setupVoice,
+  clear,
 };
