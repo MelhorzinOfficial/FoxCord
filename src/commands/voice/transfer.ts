@@ -1,4 +1,5 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, VoiceChannel, PermissionsBitField } from "discord.js";
+import prisma from "../../utils/database";
 
 export const data = new SlashCommandBuilder()
   .setName("transferir")
@@ -17,46 +18,66 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  if (!targetMember) {
+  if (!(voiceChannel instanceof VoiceChannel) || !voiceChannel.name.startsWith("🚀 ")) {
+    return interaction.reply({
+      content: "Este comando só pode ser usado em canais temporários criados pelo sistema!",
+      ephemeral: true,
+    });
+  }
+
+  if (!targetMember || !(targetMember instanceof GuildMember)) {
     return interaction.reply({
       content: "Membro não encontrado!",
       ephemeral: true,
     });
   }
 
-  if (!(targetMember instanceof GuildMember) || !targetMember.voice?.channelId || targetMember.voice.channelId !== voiceChannel.id) {
+  if (!targetMember.voice?.channelId || targetMember.voice.channelId !== voiceChannel.id) {
     return interaction.reply({
       content: "O membro precisa estar no mesmo canal de voz que você!",
       ephemeral: true,
     });
   }
 
-  const permissions = voiceChannel.permissionOverwrites.cache;
-  const ownerPermissions = permissions.find((perm) => perm.allow.has("ManageChannels") && perm.id === member?.user.id);
+  const channelData = await prisma.voiceChannel.findUnique({
+    where: { id: voiceChannel.id },
+    select: { ownerId: true },
+  });
 
-  if (!ownerPermissions) {
+  if (!channelData || channelData.ownerId !== member?.user.id) {
     return interaction.reply({
-      content: "Você não é o dono deste canal!",
+      content: "Você não tem permissão para transferir a propriedade deste canal (você não é o dono).",
       ephemeral: true,
     });
   }
+
+  if (targetMember.id === member?.user.id) {
+    return interaction.reply({
+      content: "Você já é o dono deste canal!",
+      ephemeral: true,
+    });
+  }
+
   try {
+    await prisma.voiceChannel.update({
+      where: { id: voiceChannel.id },
+      data: { ownerId: targetMember.id },
+    });
+
     await voiceChannel.permissionOverwrites.edit(member!.user.id, {
-      ManageChannels: false,
-      MoveMembers: false,
-      MuteMembers: false,
-      DeafenMembers: false,
+      MoveMembers: null,
+      MuteMembers: null,
+      DeafenMembers: null,
     });
 
     await voiceChannel.permissionOverwrites.edit(targetMember.id, {
-      ManageChannels: true,
       MoveMembers: true,
       MuteMembers: true,
       DeafenMembers: true,
     });
 
     await interaction.reply({
-      content: `A propriedade do canal foi transferida para ${targetMember}!`,
+      content: `✅ A propriedade do canal ${voiceChannel.name} foi transferida para ${targetMember}!`,
       ephemeral: true,
     });
   } catch (error) {
