@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, VoiceChannel } from "discord.js";
+import prisma from "../../utils/database";
 
 export const data = new SlashCommandBuilder().setName("info").setDescription("Mostra informações sobre o canal de voz atual");
 
@@ -20,10 +21,27 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  // Encontra o dono do canal
-  const owner = voiceChannel.permissionOverwrites.cache.find((perm) => perm.allow.has("ManageChannels") && perm.id !== voiceChannel.guild.id);
+  // Buscar dados do canal no banco, incluindo o ID do dono
+  const channelData = await prisma.voiceChannel.findUnique({
+    where: { id: voiceChannel.id },
+    select: { ownerId: true, userLimit: true },
+  });
 
-  const ownerMember = owner ? await voiceChannel.guild.members.fetch(owner.id) : null;
+  console.log(`[INFO] Dados do Canal DB para ${voiceChannel.id}:`, channelData);
+  // Tentar buscar o membro dono
+  let ownerMember = null;
+  if (channelData?.ownerId) {
+    console.log(`[INFO] Tentando buscar membro dono com ID: ${channelData.ownerId}`);
+    try {
+      ownerMember = await voiceChannel.guild.members.fetch(channelData.ownerId);
+      console.log(`[INFO] Membro dono encontrado: ${ownerMember?.user?.tag}`);
+    } catch (error) {
+      console.error(`[INFO] Erro ao buscar membro dono ${channelData.ownerId}:`, error);
+      ownerMember = null; // Garantir que é null se falhar
+    }
+  } else {
+    console.log(`[INFO] Nenhum ownerId encontrado no DB para o canal ${voiceChannel.id}`);
+  }
 
   const embed = new EmbedBuilder()
     .setColor("#2b2d31")
@@ -36,7 +54,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       },
       {
         name: "👥 Membros",
-        value: `${voiceChannel.members.size}/${voiceChannel.userLimit || "∞"}`,
+        value: `${voiceChannel.members.size}/${channelData?.userLimit || voiceChannel.userLimit || "∞"}`,
         inline: true,
       },
       {
