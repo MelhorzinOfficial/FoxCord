@@ -1,4 +1,5 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, VoiceChannel } from "discord.js";
+import prisma from "../../utils/database";
 
 export const data = new SlashCommandBuilder()
   .setName("renomear")
@@ -8,7 +9,6 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: ChatInputCommandInteraction) {
   const member = interaction.member;
   const voiceChannel = (interaction.member as GuildMember)?.voice.channel;
-  const newName = interaction.options.getString("nome");
 
   if (!voiceChannel) {
     return interaction.reply({
@@ -17,20 +17,38 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  const permissions = voiceChannel.permissionOverwrites.cache;
-  const ownerPermissions = permissions.find((perm) => perm.allow.has("ManageChannels") && perm.id === member?.user.id);
-
-  if (!ownerPermissions) {
+  if (!(voiceChannel instanceof VoiceChannel) || !voiceChannel.name.startsWith("🚀 ")) {
     return interaction.reply({
-      content: "Você não é o dono deste canal!",
+      content: "Este comando só pode ser usado em canais temporários criados pelo sistema!",
       ephemeral: true,
     });
   }
 
+  const channelData = await prisma.voiceChannel.findUnique({
+    where: { id: voiceChannel.id },
+    select: { ownerId: true },
+  });
+
+  if (!channelData || channelData.ownerId !== member?.user.id) {
+    return interaction.reply({
+      content: "Você não tem permissão para renomear este canal (você não é o dono).",
+      ephemeral: true,
+    });
+  }
+
+  const newNameInput = interaction.options.getString("nome", true);
+  const newChannelName = `🚀 ${newNameInput}`;
+
   try {
-    await voiceChannel.setName(`🎮 ${newName}`);
+    await voiceChannel.setName(newChannelName);
+
+    await prisma.voiceChannel.update({
+      where: { id: voiceChannel.id },
+      data: { name: newChannelName },
+    });
+
     await interaction.reply({
-      content: `Canal renomeado para: 🎮 ${newName}`,
+      content: `Canal renomeado para: ${newChannelName}`,
       ephemeral: true,
     });
   } catch (error) {
