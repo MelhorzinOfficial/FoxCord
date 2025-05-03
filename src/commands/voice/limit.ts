@@ -1,9 +1,10 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, VoiceChannel } from "discord.js";
+import prisma from "../../utils/database";
 
 export const data = new SlashCommandBuilder()
   .setName("limite")
   .setDescription("Define o limite de usuários no canal de voz")
-  .addIntegerOption((option) => option.setName("quantidade").setDescription("Quantidade de usuários (mínimo 10, máximo 99)").setRequired(true).setMinValue(10).setMaxValue(99));
+  .addIntegerOption((option) => option.setName("quantidade").setDescription("Quantidade de usuários (1 a 99)").setRequired(true).setMinValue(1).setMaxValue(99));
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   const member = interaction.member as GuildMember;
@@ -16,19 +17,21 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  if (!voiceChannel.name.startsWith("🎮")) {
+  if (!voiceChannel.name.startsWith("🚀 ")) {
     return interaction.reply({
       content: "Este comando só pode ser usado em canais temporários criados pelo sistema!",
       ephemeral: true,
     });
   }
 
-  const permissions = voiceChannel.permissionOverwrites.cache;
-  const memberPermissions = permissions.get(member.id);
+  const channelData = await prisma.voiceChannel.findUnique({
+    where: { id: voiceChannel.id },
+    select: { ownerId: true },
+  });
 
-  if (!memberPermissions?.allow.has("ManageChannels")) {
+  if (!channelData || channelData.ownerId !== member.id) {
     return interaction.reply({
-      content: "Você não é o dono deste canal!",
+      content: "Você não tem permissão para alterar o limite deste canal (você não é o dono).",
       ephemeral: true,
     });
   }
@@ -37,8 +40,14 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   try {
     await voiceChannel.setUserLimit(limit);
+
+    await prisma.voiceChannel.update({
+      where: { id: voiceChannel.id },
+      data: { userLimit: limit },
+    });
+
     await interaction.reply({
-      content: `Limite de usuários definido para: ${limit}`,
+      content: `Limite de usuários do canal ${voiceChannel.name} definido para: ${limit}`,
       ephemeral: true,
     });
   } catch (error) {
