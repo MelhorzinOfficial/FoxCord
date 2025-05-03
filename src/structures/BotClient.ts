@@ -3,7 +3,6 @@ import path from "path";
 import fs from "fs";
 import { Command } from "./Commands";
 import { deployCommands } from "../deploy-commands";
-import { handleVoiceStateUpdate } from "../events/voiceStateUpdate";
 
 export class BotClient extends Client {
   commands: Collection<string, Command>;
@@ -12,13 +11,12 @@ export class BotClient extends Client {
     super(options);
     this.commands = new Collection();
 
-    // Initialize commands first, then register events
+    // Initialize commands first
     try {
       this.initializeCommands();
-      this.registerEvents();
-      console.log("Bot client initialization complete");
+      console.log("Bot client command initialization complete");
     } catch (error) {
-      console.error("Error during bot initialization:", error);
+      console.error("Error during bot command initialization:", error);
     }
   }
 
@@ -90,41 +88,5 @@ export class BotClient extends Client {
     } catch (error) {
       console.error("Failed to initialize commands:", error);
     }
-  }
-
-  private registerEvents() {
-    this.once(Events.ClientReady, async () => {
-      console.log(`Logged in as ${this.user?.tag}`);
-      const guilds = await this.guilds.fetch();
-      guilds.forEach(async (guild) => {
-        await deployCommands({ guildId: guild.id });
-        console.log(`Deployed commands to guild: ${guild.name}`);
-      });
-    });
-
-    this.on(Events.InteractionCreate, async (interaction) => {
-      if (!interaction.isChatInputCommand()) return;
-
-      const command = this.commands.get(interaction.commandName);
-
-      if (!command) {
-        console.log(`Comando não encontrado: ${interaction.commandName}`);
-        return;
-      }
-
-      try {
-        console.log(`Executando comando: ${interaction.commandName}`);
-        await command.execute(interaction);
-      } catch (error) {
-        console.error(`Erro ao executar comando ${interaction.commandName}:`, error);
-        if (interaction.replied || interaction.deferred) {
-          await interaction.followUp({ content: "Houve um erro ao executar este comando!", ephemeral: true });
-        } else {
-          await interaction.reply({ content: "Houve um erro ao executar este comando!", ephemeral: true });
-        }
-      }
-    });
-
-    this.on(Events.VoiceStateUpdate, handleVoiceStateUpdate);
   }
 }
