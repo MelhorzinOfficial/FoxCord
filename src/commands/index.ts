@@ -1,3 +1,7 @@
+// Este arquivo não é mais usado para carregar comandos para deploy.
+// O carregamento é feito dinamicamente em BotClient.ts
+// e o deploy usa a coleção client.commands.
+
 import * as ping from "./info/ping";
 import * as limite from "./voice/limit";
 import * as renomear from "./voice/rename";
