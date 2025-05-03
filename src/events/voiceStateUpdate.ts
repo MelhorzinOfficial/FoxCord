@@ -8,12 +8,14 @@ export async function handleVoiceStateUpdate(oldState: VoiceState, newState: Voi
     // Buscar configuração do servidor no banco de dados
     const guildData = await prisma.guild.findUnique({
       where: { id: guild.id },
+      select: { voiceGeneratorChannelId: true, defaultUserLimit: true },
     });
 
     // Se não houver configuração ou canal gerador, não faz nada
     if (!guildData?.voiceGeneratorChannelId) return;
 
     const generatorChannelId = guildData.voiceGeneratorChannelId;
+    const defaultUserLimit = guildData.defaultUserLimit ?? 25;
     const parentChannel = guild.channels.cache.get(generatorChannelId)?.parent;
     const category = parentChannel instanceof CategoryChannel ? parentChannel : null;
 
@@ -81,11 +83,12 @@ export async function handleVoiceStateUpdate(oldState: VoiceState, newState: Voi
           name: `🚀 ${member.displayName}`,
           type: ChannelType.GuildVoice,
           parent: category,
-          userLimit: 10,
+          userLimit: defaultUserLimit,
+          bitrate: 384000,
           permissionOverwrites: [
             {
               id: member.id,
-              allow: [PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.MoveMembers, PermissionsBitField.Flags.MuteMembers, PermissionsBitField.Flags.DeafenMembers, PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak, PermissionsBitField.Flags.Stream, PermissionsBitField.Flags.UseVAD],
+              allow: [PermissionsBitField.Flags.MoveMembers, PermissionsBitField.Flags.MuteMembers, PermissionsBitField.Flags.DeafenMembers, PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak, PermissionsBitField.Flags.Stream, PermissionsBitField.Flags.UseVAD],
             },
             {
               id: guild.id,
@@ -101,7 +104,7 @@ export async function handleVoiceStateUpdate(oldState: VoiceState, newState: Voi
             name: newChannel.name,
             guildId: guild.id,
             ownerId: member.id,
-            userLimit: 10,
+            userLimit: defaultUserLimit,
           },
         });
 
