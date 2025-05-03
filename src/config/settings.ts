@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 interface BotConfig {
   voiceSettings: {
@@ -19,7 +19,7 @@ interface BotConfig {
 const defaultConfig: BotConfig = {
   voiceSettings: {
     defaultUserLimit: 99,
-    defaultPrefix: "🚀",
+    defaultPrefix: "🤢",
     maxChannelsPerUser: 1,
     deleteEmptyAfterSeconds: 30,
   },
@@ -27,7 +27,9 @@ const defaultConfig: BotConfig = {
     defaultOwnerPerms: ["ManageChannels", "MoveMembers", "MuteMembers", "DeafenMembers", "ViewChannel", "Connect", "Speak", "Stream", "UseVAD"],
     defaultMemberPerms: ["ViewChannel", "Connect", "Speak", "Stream", "UseVAD"],
   },
-  developers: [],
+  developers: [
+    
+  ],
 };
 
 // Caminho para o arquivo de configuração
