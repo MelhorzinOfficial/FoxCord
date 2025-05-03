@@ -17,6 +17,9 @@ model Guild {
   id                      String         @id
   name                    String
   voiceGeneratorChannelId String?
+  defaultUserLimit        Int?
+  autoRoleEnabled         Boolean        @default(false)
+  autoRoleIDs             String[]       @default([])
   voiceChannels           VoiceChannel[]
   users                   User[]
   createdAt               DateTime       @default(now())
@@ -40,7 +43,7 @@ model VoiceChannel {
   guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
   ownerId   String
   owner     User     @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  userLimit Int      @default(10)
+  userLimit Int
   isLocked  Boolean  @default(false)
   status    String?
   createdAt DateTime @default(now())
