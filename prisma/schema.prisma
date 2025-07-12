@@ -14,22 +14,28 @@ datasource db {
 }
 
 model Guild {
-  id                      String         @id
+  id String @id
+
   name                    String
   voiceGeneratorChannelId String?
   defaultUserLimit        Int?
-  autoRoleEnabled         Boolean        @default(false)
-  autoRoleIDs             String[]       @default([])
-  welcomeChannelId        String? // Log Boas-vindas
-  welcomeMessage          String?        @default("👋 Bem-vindo(a) {user.mention} a **{guild.name}**! 🎉") // Log Boas-vindas
-  welcomeEnabled          Boolean        @default(false) // Log Boas-vindas
-  farewellChannelId       String? // Log Despedida
-  farewellMessage         String?        @default("😥 Adeus **{user.tag}**... Sentiremos sua falta.") // Log Despedida
-  farewellEnabled         Boolean        @default(false) // Log Despedida
-  voiceChannels           VoiceChannel[]
-  users                   User[]
-  createdAt               DateTime       @default(now())
-  updatedAt               DateTime       @updatedAt
+
+  autoRoleEnabled Boolean  @default(false)
+  autoRoleIDs     String[] @default([])
+
+  welcomeChannelId String? // Log Boas-vindas
+  welcomeMessage   String? @default("👋 Bem-vindo(a) {user.mention} a **{guild.name}**! 🎉") // Log Boas-vindas
+
+  welcomeEnabled    Boolean @default(false) // Log Boas-vindas
+  farewellChannelId String? // Log Despedida
+  farewellMessage   String? @default("😥 Adeus **{user.tag}**... Sentiremos sua falta.") // Log Despedida
+  farewellEnabled   Boolean @default(false) // Log Despedida
+
+  voiceChannels VoiceChannel[]
+  users         User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {

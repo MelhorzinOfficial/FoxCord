@@ -1,11 +1,30 @@
-version: '3.7'
-
 services:
-  pg:
-    image: bitnami/postgresql:latest
-    ports:
-      - "5470:5432"
+  db:
+    image: postgres:16
     environment:
-      - POSTGRES_USERNAME=docker
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_DATABASE=docker-api-back
+      POSTGRES_USER: raposo
+      POSTGRES_PASSWORD: raposo123
+      POSTGRES_DB: bot_melhorzin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raposo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://raposo:raposo123@db:5432/bot_melhorzin?schema=public
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["./index"]
+
+volumes:
+  postgres_data:
