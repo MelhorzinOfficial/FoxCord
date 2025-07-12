@@ -29,7 +29,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: ["sh", "-c", "./wait-for-it.sh db:5432 --timeout 30 -- bun prisma migrate deploy && ./index"]
+    command: ["sh", "-c", "./wait-for-it.sh db:5432 -t 30 -- bun prisma migrate deploy && ./index"]
 
 volumes:
   postgres_data:

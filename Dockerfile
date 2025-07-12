@@ -45,6 +45,6 @@ COPY ./prisma ./prisma
 RUN bun add prisma
 
 # Executar migrações e iniciar a aplicação
-CMD ["sh", "-c", "./wait-for-it.sh db:5432 --timeout 30 -- bun prisma migrate deploy && ./index"]
+CMD ["sh", "-c", "./wait-for-it.sh db:5432 -t 30 -- bun prisma migrate deploy && ./index"]
 
 ENV NODE_ENV=production
