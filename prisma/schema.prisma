@@ -1,15 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -20,16 +14,17 @@ model Guild {
   voiceGeneratorChannelId String?
   defaultUserLimit        Int?
 
-  autoRoleEnabled Boolean  @default(false)
-  autoRoleIDs     String[] @default([])
+  autoRoleEnabled Boolean @default(false)
+  // Changed from String[] to String (JSON) for SQLite compatibility
+  autoRoleIDs     String  @default("[]") // Store as JSON string
 
-  welcomeChannelId String? // Log Boas-vindas
-  welcomeMessage   String? @default("👋 Bem-vindo(a) {user.mention} a **{guild.name}**! 🎉") // Log Boas-vindas
+  welcomeChannelId String?
+  welcomeMessage   String? @default("👋 Bem-vindo(a) {user.mention} a **{guild.name}**! 🎉")
 
-  welcomeEnabled    Boolean @default(false) // Log Boas-vindas
-  farewellChannelId String? // Log Despedida
-  farewellMessage   String? @default("😥 Adeus **{user.tag}**... Sentiremos sua falta.") // Log Despedida
-  farewellEnabled   Boolean @default(false) // Log Despedida
+  welcomeEnabled    Boolean @default(false)
+  farewellChannelId String?
+  farewellMessage   String? @default("😥 Adeus **{user.tag}**... Sentiremos sua falta.")
+  farewellEnabled   Boolean @default(false)
 
   voiceChannels VoiceChannel[]
   users         User[]
