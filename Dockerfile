@@ -3,6 +3,9 @@ FROM oven/bun AS build
 
 WORKDIR /app
 
+# Instalar OpenSSL
+RUN apt-get update -y && apt-get install -y openssl
+
 # Copiar arquivos de dependências
 COPY package.json package.json
 COPY bun.lock bun.lock
@@ -30,6 +33,9 @@ RUN bun prisma generate && bun build \
 FROM oven/bun
 
 WORKDIR /app
+
+# Instalar OpenSSL na imagem final
+RUN apt-get update -y && apt-get install -y openssl
 
 # Copiar o binário compilado da etapa de build
 COPY --from=build /app/index index
