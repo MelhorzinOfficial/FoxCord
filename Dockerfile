@@ -34,8 +34,10 @@ FROM oven/bun
 
 WORKDIR /app
 
-# Instalar OpenSSL na imagem final
-RUN apt-get update -y && apt-get install -y openssl
+# Instalar OpenSSL e dependências para wait-for-it
+RUN apt-get update -y && apt-get install -y openssl bash curl && \
+    curl -sL https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > wait-for-it.sh && \
+    chmod +x wait-for-it.sh
 
 # Copiar o binário compilado da etapa de build
 COPY --from=build /app/index index
@@ -45,6 +47,6 @@ COPY ./prisma ./prisma
 RUN bun add prisma
 
 # Executar migrações e iniciar a aplicação
-CMD ["sh", "-c", "bun prisma migrate deploy && ./index"]
+CMD ["sh", "-c", "./wait-for-it.sh db:5432 -- bun prisma migrate deploy && ./index"]
 
 ENV NODE_ENV=production
