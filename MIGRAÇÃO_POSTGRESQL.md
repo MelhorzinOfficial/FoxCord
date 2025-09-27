@@ -5,8 +5,9 @@
 Seu bot foi migrado com sucesso do SQLite para PostgreSQL. Aqui estão as principais mudanças feitas:
 
 ### 1. Dependências Atualizadas
-- Adicionado `pg` (driver PostgreSQL)
-- Adicionado `@types/pg` (tipos TypeScript)
+- Removido `pg` (não necessário, Prisma gerencia a conexão)
+- Removido `@types/pg` (não necessário)
+- Mantido apenas `@prisma/client` e `prisma` (devDependency)
 
 ### 2. Schema Prisma
 - Alterado provider de `sqlite` para `postgresql`
@@ -56,14 +57,26 @@ DATABASE_URL=postgresql://postgres:sua_senha@localhost:5432/foxcord_db
 bun install
 
 # Gerar cliente Prisma
-bun prisma generate
+bun run db:generate
 
-# Executar migrações
-bun prisma migrate deploy
+# Executar migrações (primeira vez)
+bun run db:push
 
-# Ou se for primeira vez
-bun prisma db push
+# Ou para desenvolvimento
+bun run db:migrate
+
+# Para produção
+bun run db:deploy
 ```
+
+### 5. Scripts Disponíveis
+- `bun run dev` - Executar em desenvolvimento
+- `bun run start` - Executar em produção
+- `bun run build` - Gerar cliente Prisma e executar migrações
+- `bun run db:generate` - Gerar cliente Prisma
+- `bun run db:push` - Sincronizar schema com banco (desenvolvimento)
+- `bun run db:migrate` - Criar migração (desenvolvimento)
+- `bun run db:deploy` - Executar migrações (produção)
 
 ## Funcionalidades Corrigidas
 
@@ -83,7 +96,7 @@ bun prisma db push
 ## Como Testar
 
 1. Configure o PostgreSQL e as variáveis de ambiente
-2. Execute `bun dev` para testar em desenvolvimento
+2. Execute `bun run dev` para testar em desenvolvimento
 3. Teste os comandos:
    - `/setupvoice` para configurar canal gerador
    - `/autorole toggle` para ativar sistema de cargos automáticos

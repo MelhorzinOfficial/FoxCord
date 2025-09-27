@@ -4,21 +4,23 @@
   "description": "RaposoBot é um bot para Discord de código aberto, repleto de funcionalidades legais e sempre em evolução. Qualquer pessoa pode usá-lo livremente para fins não comerciais!",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "bun src/index.ts",
-    "start": "./index",
-    "build": "bun prisma generate && bun prisma migrate deploy && bun build --compile --minify-whitespace --minify-syntax --target bun --outfile index ./src/index.ts"
+    "dev": "bun run src/index.ts",
+    "start": "bun run src/index.ts",
+    "build": "bun prisma generate && bun prisma migrate deploy",
+    "db:generate": "bun prisma generate",
+    "db:push": "bun prisma db push",
+    "db:migrate": "bun prisma migrate dev",
+    "db:deploy": "bun prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
     "discord.js": "^14.18.0",
     "dotenv": "17.2.0",
-    "winston": "^3.17.0",
-    "pg": "^8.11.3"
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "prisma": "^6.6.0",
     "@types/node": "24.0.13",
-    "@types/pg": "^8.10.9",
     "typescript": "^5.7.3"
   },
   "repository": {
