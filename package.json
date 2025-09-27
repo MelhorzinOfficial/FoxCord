@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "bun run src/index.ts",
-    "start": "bun run src/index.ts",
-    "build": "bun prisma generate && bun prisma migrate deploy",
+    "start": "bun prisma generate && bun run src/index.ts",
+    "build": "bun prisma generate",
+    "postinstall": "bun prisma generate",
     "db:generate": "bun prisma generate",
     "db:push": "bun prisma db push",
     "db:migrate": "bun prisma migrate dev",

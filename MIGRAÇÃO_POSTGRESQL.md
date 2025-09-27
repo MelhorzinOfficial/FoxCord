@@ -72,11 +72,29 @@ bun run db:deploy
 ### 5. Scripts Disponíveis
 - `bun run dev` - Executar em desenvolvimento
 - `bun run start` - Executar em produção
-- `bun run build` - Gerar cliente Prisma e executar migrações
+- `bun run build` - Gerar cliente Prisma (apenas)
 - `bun run db:generate` - Gerar cliente Prisma
 - `bun run db:push` - Sincronizar schema com banco (desenvolvimento)
 - `bun run db:migrate` - Criar migração (desenvolvimento)
 - `bun run db:deploy` - Executar migrações (produção)
+
+### 6. Deploy no Railway
+Para fazer deploy no Railway:
+
+1. **Configure o banco PostgreSQL no Railway**
+2. **Configure as variáveis de ambiente**:
+   - `DISCORD_TOKEN`
+   - `DISCORD_CLIENT_ID`
+   - `DATABASE_URL` (fornecido pelo Railway)
+3. **O build agora só gera o cliente Prisma** (sem tentar conectar no banco)
+4. **Execute as migrações manualmente** após o deploy:
+   ```bash
+   bun run db:deploy
+   ```
+   Ou use o Railway CLI:
+   ```bash
+   railway run bun run db:deploy
+   ```
 
 ## Funcionalidades Corrigidas
 
