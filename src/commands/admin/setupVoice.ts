@@ -8,7 +8,10 @@ export const data = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+  console.log(`[SETUPVOICE] Comando executado por ${interaction.user.tag} em ${interaction.guild?.name}`);
+  
   if (!interaction.guild) {
+    console.log(`[SETUPVOICE] Erro: Comando usado fora de servidor`);
     return interaction.reply({
       content: "Este comando só pode ser usado em servidores!",
       ephemeral: true,
@@ -16,8 +19,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   }
 
   const channel = interaction.options.getChannel("canal", true);
+  console.log(`[SETUPVOICE] Canal selecionado: ${channel.name} (${channel.id}) - Tipo: ${channel.type}`);
 
   if (channel.type !== ChannelType.GuildVoice) {
+    console.log(`[SETUPVOICE] Erro: Canal não é de voz`);
     return interaction.reply({
       content: "Você precisa selecionar um canal de voz!",
       ephemeral: true,
@@ -25,8 +30,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   }
 
   try {
+    console.log(`[SETUPVOICE] Iniciando upsert para guild ${interaction.guild.id}`);
+    
     // Buscar ou criar o registro do servidor
-    await prisma.guild.upsert({
+    const result = await prisma.guild.upsert({
       where: { id: interaction.guild.id },
       update: { 
         name: interaction.guild.name,
@@ -38,16 +45,22 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         voiceGeneratorChannelId: channel.id,
       },
     });
+    
+    console.log(`[SETUPVOICE] Upsert concluído:`, result);
 
     // Atualizar a variável de ambiente para compatibilidade com o código existente
     process.env.VOICE_GENERATOR_CHANNEL = channel.id;
+    console.log(`[SETUPVOICE] Variável de ambiente atualizada: ${channel.id}`);
 
     await interaction.reply({
       content: `✅ O canal ${channel.name} foi configurado com sucesso como gerador de salas de voz!`,
       ephemeral: true,
     });
+    
+    console.log(`[SETUPVOICE] Resposta enviada com sucesso`);
   } catch (error) {
-    console.error("Erro ao configurar canal gerador:", error);
+    console.error("[SETUPVOICE] Erro detalhado:", error);
+    console.error("[SETUPVOICE] Stack trace:", error.stack);
     await interaction.reply({
       content: "❌ Ocorreu um erro ao configurar o canal gerador de salas de voz.",
       ephemeral: true,
