@@ -54,16 +54,16 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     await interaction.reply({
       content: `✅ O canal ${channel.name} foi configurado com sucesso como gerador de salas de voz!`,
-      ephemeral: true,
+      flags: 64, // Ephemeral flag
     });
     
     console.log(`[SETUPVOICE] Resposta enviada com sucesso`);
-  } catch (error) {
+  } catch (error: any) {
     console.error("[SETUPVOICE] Erro detalhado:", error);
     console.error("[SETUPVOICE] Stack trace:", error.stack);
     await interaction.reply({
       content: "❌ Ocorreu um erro ao configurar o canal gerador de salas de voz.",
-      ephemeral: true,
+      flags: 64, // Ephemeral flag
     });
   }
 }
