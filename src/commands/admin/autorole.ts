@@ -22,7 +22,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   if (!interaction.inGuild()) {
-    return interaction.reply({ content: "Este comando só pode ser usado em um servidor.", ephemeral: true });
+    return interaction.reply({ content: "Este comando só pode ser usado em um servidor.", flags: 64 });
   }
   if (!interaction.guild) return; // Necessário para type safety
 
@@ -44,17 +44,17 @@ export async function execute(interaction: ChatInputCommandInteraction) {
           where: { id: interaction.guild.id },
           data: { autoRoleEnabled: newStatus },
         });
-        return interaction.reply({ content: `Sistema de AutoRole ${newStatus ? "ativado" : "desativado"}.`, ephemeral: true });
+        return interaction.reply({ content: `Sistema de AutoRole ${newStatus ? "ativado" : "desativado"}.`, flags: 64 });
       }
 
       case "add": {
         const roleToAdd = interaction.options.getRole("cargo", true) as Role;
         if (guildData.autoRoleIDs.includes(roleToAdd.id)) {
-          return interaction.reply({ content: `O cargo ${roleToAdd.name} já está na lista.`, ephemeral: true });
+          return interaction.reply({ content: `O cargo ${roleToAdd.name} já está na lista.`, flags: 64 });
         }
         // Verifica se o cargo é gerenciável pelo bot
         if (roleToAdd.managed || roleToAdd.position >= interaction.guild.members.me!.roles.highest.position) {
-          return interaction.reply({ content: `Não posso gerenciar o cargo ${roleToAdd.name}. Verifique a hierarquia de cargos e se ele não é gerenciado por uma integração.`, ephemeral: true });
+          return interaction.reply({ content: `Não posso gerenciar o cargo ${roleToAdd.name}. Verifique a hierarquia de cargos e se ele não é gerenciado por uma integração.`, flags: 64 });
         }
 
         const updatedRoles = [...guildData.autoRoleIDs, roleToAdd.id];
@@ -62,13 +62,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
           where: { id: interaction.guild.id },
           data: { autoRoleIDs: updatedRoles },
         });
-        return interaction.reply({ content: `Cargo ${roleToAdd.name} adicionado à lista do AutoRole.`, ephemeral: true });
+        return interaction.reply({ content: `Cargo ${roleToAdd.name} adicionado à lista do AutoRole.`, flags: 64 });
       }
 
       case "remove": {
         const roleToRemove = interaction.options.getRole("cargo", true) as Role;
         if (!guildData.autoRoleIDs.includes(roleToRemove.id)) {
-          return interaction.reply({ content: `O cargo ${roleToRemove.name} não está na lista.`, ephemeral: true });
+          return interaction.reply({ content: `O cargo ${roleToRemove.name} não está na lista.`, flags: 64 });
         }
 
         const updatedRoles = guildData.autoRoleIDs.filter((id) => id !== roleToRemove.id);
@@ -76,7 +76,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
           where: { id: interaction.guild.id },
           data: { autoRoleIDs: updatedRoles },
         });
-        return interaction.reply({ content: `Cargo ${roleToRemove.name} removido da lista do AutoRole.`, ephemeral: true });
+        return interaction.reply({ content: `Cargo ${roleToRemove.name} removido da lista do AutoRole.`, flags: 64 });
       }
 
       case "list": {
@@ -92,11 +92,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
           embed.addFields({ name: "Cargos Automáticos", value: "Nenhum cargo configurado." });
         }
 
-        return interaction.reply({ embeds: [embed], ephemeral: true });
+        return interaction.reply({ embeds: [embed], flags: 64 });
       }
     }
   } catch (error) {
     console.error("Erro no comando autorole:", error);
-    return interaction.reply({ content: "Ocorreu um erro ao processar o comando AutoRole.", ephemeral: true });
+    return interaction.reply({ content: "Ocorreu um erro ao processar o comando AutoRole.", flags: 64 });
   }
 }
