@@ -44,12 +44,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     // Atualizar permissões no Discord
     await voiceChannel.permissionOverwrites.edit(interaction.guild!.id, {
-      Connect: isLocked, // Se estava trancada, destranca; se estava destrancada, tranca
+      Connect: !isLocked, // Se estava trancada, destranca; se estava destrancada, tranca
     });
 
     // Atualizar o nome do canal com um indicador visual
     const currentName = voiceChannel.name;
-    const newName = isLocked ? currentName.replace("🔒 ", "").replace("🚀 ", "🚀 ") : currentName.replace("🚀 ", "🔒 🚀 ");
+    const newName = isLocked ? currentName.replace("🔒 ", "") : `🔒 ${currentName}`;
 
     await voiceChannel.setName(newName);
 

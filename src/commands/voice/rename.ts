@@ -17,7 +17,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  if (!(voiceChannel instanceof VoiceChannel) || !voiceChannel.name.startsWith("🚀 ")) {
+  if (!(voiceChannel instanceof VoiceChannel) || !voiceChannel.name.startsWith("🚀")) {
     return interaction.reply({
       content: "Este comando só pode ser usado em canais temporários criados pelo sistema!",
       ephemeral: true,

@@ -26,9 +26,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   try {
     // Buscar ou criar o registro do servidor
-    const guild = await prisma.guild.upsert({
+    await prisma.guild.upsert({
       where: { id: interaction.guild.id },
-      update: { voiceGeneratorChannelId: channel.id },
+      update: { 
+        name: interaction.guild.name,
+        voiceGeneratorChannelId: channel.id 
+      },
       create: {
         id: interaction.guild.id,
         name: interaction.guild.name,

@@ -64,7 +64,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     await targetMember.voice.disconnect();
 
     // Atualizar as permissões para impedir que ele volte
-    await voiceChannel.permissionOverwrites.create(targetMember, {
+    await voiceChannel.permissionOverwrites.edit(targetMember, {
       Connect: false,
     });
 

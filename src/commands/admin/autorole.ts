@@ -57,9 +57,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
           return interaction.reply({ content: `Não posso gerenciar o cargo ${roleToAdd.name}. Verifique a hierarquia de cargos e se ele não é gerenciado por uma integração.`, ephemeral: true });
         }
 
+        const updatedRoles = [...guildData.autoRoleIDs, roleToAdd.id];
         await prisma.guild.update({
           where: { id: interaction.guild.id },
-          data: { autoRoleIDs: { push: roleToAdd.id } },
+          data: { autoRoleIDs: updatedRoles },
         });
         return interaction.reply({ content: `Cargo ${roleToAdd.name} adicionado à lista do AutoRole.`, ephemeral: true });
       }

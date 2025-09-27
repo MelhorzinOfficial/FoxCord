@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,9 +14,8 @@ model Guild {
   voiceGeneratorChannelId String?
   defaultUserLimit        Int?
 
-  autoRoleEnabled Boolean @default(false)
-  // Changed from String[] to String (JSON) for SQLite compatibility
-  autoRoleIDs     String  @default("[]") // Store as JSON string
+  autoRoleEnabled Boolean  @default(false)
+  autoRoleIDs     String[] @default([])
 
   welcomeChannelId String?
   welcomeMessage   String? @default("👋 Bem-vindo(a) {user.mention} a **{guild.name}**! 🎉")

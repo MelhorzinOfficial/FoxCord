@@ -18,7 +18,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  if (!(voiceChannel instanceof VoiceChannel) || !voiceChannel.name.startsWith("🚀 ")) {
+  if (!(voiceChannel instanceof VoiceChannel) || !voiceChannel.name.startsWith("🚀")) {
     return interaction.reply({
       content: "Este comando só pode ser usado em canais temporários criados pelo sistema!",
       ephemeral: true,
@@ -65,9 +65,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     await voiceChannel.permissionOverwrites.edit(member!.user.id, {
-      MoveMembers: null,
-      MuteMembers: null,
-      DeafenMembers: null,
+      MoveMembers: false,
+      MuteMembers: false,
+      DeafenMembers: false,
     });
 
     await voiceChannel.permissionOverwrites.edit(targetMember.id, {

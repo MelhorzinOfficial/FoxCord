@@ -57,7 +57,7 @@ export async function handleGuildMemberAdd(member: GuildMember, client: BotClien
           const updatedRoles = guildData.autoRoleIDs.filter((id) => id !== roleId);
           await prisma.guild.update({
             where: { id: member.guild.id },
-            data: { autoRoleIDs: { set: updatedRoles } },
+            data: { autoRoleIDs: updatedRoles },
           });
           // Atualiza a cópia local para consistência no loop (embora não seja estritamente necessário aqui)
           guildData.autoRoleIDs = updatedRoles;
@@ -68,7 +68,7 @@ export async function handleGuildMemberAdd(member: GuildMember, client: BotClien
         const updatedRoles = guildData.autoRoleIDs.filter((id) => id !== roleId);
         await prisma.guild.update({
           where: { id: member.guild.id },
-          data: { autoRoleIDs: { set: updatedRoles } },
+          data: { autoRoleIDs: updatedRoles },
         });
         guildData.autoRoleIDs = updatedRoles;
       }
