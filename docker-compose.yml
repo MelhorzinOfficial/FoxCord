@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres_foxcord
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=sua_senha
+      - POSTGRESQL_DATABASE=foxcord_db
+    ports:
+      - "8722:5432"
