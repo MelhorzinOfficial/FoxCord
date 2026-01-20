@@ -27,9 +27,36 @@ model Guild {
 
   voiceChannels VoiceChannel[]
   users         User[]
+  roleSelector  RoleSelector?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model RoleSelector {
+  id          String   @id @default(cuid())
+  guildId     String   @unique
+  guild       Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  channelId   String
+  messageId   String?
+  title       String   @default("🎭 Seletor de Cargos")
+  description String   @default("Escolha seus cargos no menu abaixo! Para remover, basta desmarcar a opção.")
+  roles       SelectorRole[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SelectorRole {
+  id          String       @id @default(cuid())
+  roleId      String
+  label       String
+  description String?
+  emoji       String?
+  selector    RoleSelector @relation(fields: [selectorId], references: [id], onDelete: Cascade)
+  selectorId  String
+  createdAt   DateTime     @default(now())
+
+  @@unique([selectorId, roleId])
 }
 
 model User {
