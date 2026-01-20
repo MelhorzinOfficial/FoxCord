@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "bun run src/index.ts",
-    "start": "bun prisma generate && bun run src/index.ts",
+    "start": "bun prisma generate && bun prisma db push && bun run src/index.ts",
     "build": "bun prisma generate",
     "postinstall": "bun prisma generate",
     "db:generate": "bun prisma generate",
