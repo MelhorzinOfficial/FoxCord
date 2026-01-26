@@ -85,6 +85,7 @@ export async function handleVoiceStateUpdate(oldState: VoiceState, newState: Voi
           parent: category,
           userLimit: defaultUserLimit,
           bitrate: 384000,
+          rtcRegion: 'brazil',
           permissionOverwrites: [
             {
               id: member.id,
