@@ -87,6 +87,7 @@ function isFlood(userId: string, guildId: string, content: string): boolean {
 		const similarity = calculateSimilarity(content, prevMessage.content);
 		if (similarity >= CONFIG.similarityThreshold) {
 			similarCount++;
+			if (similarCount >= 2) break;
 		}
 	}
 
@@ -120,10 +121,11 @@ export async function handleAntiFlood(message: Message): Promise<void> {
 			await message.delete();
 
 			const now = Date.now();
-			const lastWarnTime = lastWarning.get(message.author.id) ?? 0;
+			const warningKey = `${message.guild.id}:${message.author.id}`;
+			const lastWarnTime = lastWarning.get(warningKey) ?? 0;
 
 			if ('send' in message.channel && now - lastWarnTime >= WARNING_THROTTLE_MS) {
-				lastWarning.set(message.author.id, now);
+				lastWarning.set(warningKey, now);
 
 				const warning = await message.channel.send({
 					content: `**${message.member?.displayName ?? message.author.username}**, evite enviar mensagens repetidas!`,
