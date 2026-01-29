@@ -3,6 +3,7 @@ import { BotClient } from '../structures/BotClient';
 import { handleVoiceStateUpdate } from './voiceStateUpdate';
 import { handleGuildMemberAdd } from './guild/guildMemberAdd';
 import { handleRoleSelectorInteraction } from './interactions/roleSelectorHandler';
+import { handleAntiFlood } from './moderation/antiFlood';
 
 // Função para registrar todos os handlers de eventos
 export function registerEvents(client: BotClient): void {
@@ -41,8 +42,12 @@ export function registerEvents(client: BotClient): void {
 		}
 	});
 
-	// Adicione outros listeners de eventos aqui...
-	// client.on(Events.MessageCreate, message => { ... });
+	// Anti-Flood
+	client.on(Events.MessageCreate, (message) => {
+		handleAntiFlood(message).catch((err) => {
+			console.error('Erro não tratado em AntiFlood:', err);
+		});
+	});
 
 	console.log('✅ Handlers de eventos registrados.');
 }
