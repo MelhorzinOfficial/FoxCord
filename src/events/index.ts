@@ -2,6 +2,7 @@ import { Events } from 'discord.js';
 import { BotClient } from '../structures/BotClient';
 import { handleVoiceStateUpdate } from './voiceStateUpdate';
 import { handleGuildMemberAdd } from './guild/guildMemberAdd';
+import { handleMessageCreate } from './guild/messageCreate';
 import { handleRoleSelectorInteraction } from './interactions/roleSelectorHandler';
 import { handleAntiFlood } from './moderation/antiFlood';
 
@@ -48,6 +49,15 @@ export function registerEvents(client: BotClient): void {
 			console.error('Erro não tratado em AntiFlood:', err);
 		});
 	});
+
+	// Honeypot anti-bot: castiga quem enviar no canal-armadilha (/trap)
+	client.on(Events.MessageCreate, (message) => {
+		handleMessageCreate(message).catch((err) => {
+			console.error('Erro não tratado em MessageCreate:', err);
+		});
+	});
+
+	// Adicione outros listeners de eventos aqui...
 
 	console.log('✅ Handlers de eventos registrados.');
 }
