@@ -29,11 +29,22 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     // criar
     const me = interaction.guild.members.me;
-    if (!me?.permissions.has(PermissionsBitField.Flags.ManageChannels) || !me.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
-      return interaction.reply({ content: "Preciso das permissões **Gerenciar Canais** e **Castigar Membros (Moderar Membros)** para montar a armadilha.", flags: 64 });
+    const required = [PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.ModerateMembers, PermissionsBitField.Flags.ManageMessages];
+    if (!me?.permissions.has(required)) {
+      return interaction.reply({ content: "Preciso das permissões **Gerenciar Canais**, **Castigar Membros (Moderar Membros)** e **Gerenciar Mensagens** para montar a armadilha.", flags: 64 });
     }
 
     await interaction.deferReply({ flags: 64 });
+
+    // Reaproveita o canal-armadilha existente se ainda existir, em vez de criar órfãos
+    const existing = await prisma.guild.findUnique({ where: { id: interaction.guild.id }, select: { trapChannelId: true } });
+    if (existing?.trapChannelId) {
+      const current = await interaction.guild.channels.fetch(existing.trapChannelId).catch(() => null);
+      if (current) {
+        setTrapChannel(interaction.guild.id, current.id);
+        return interaction.editReply({ content: `⚠️ A armadilha já está ativa em ${current}. Use \`/trap remover\` antes de recriar.` });
+      }
+    }
 
     const channel = await interaction.guild.channels.create({
       name: "🚫-não-envie-aqui",
